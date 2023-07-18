@@ -5,41 +5,48 @@
 import sys
 
 
-def printsts(dic, size):
-    """ WWPrints information """
-    print("File size: {:d}".format(size))
-    for i in sorted(dic.keys()):
-        if dic[i] != 0:
-            print("{}: {:d}".format(i, dic[i]))
+def compute_metrics(lines):
+    total_size = 0
+    status_code_counts = {}
 
-
-sts = {"200": 0, "301": 0, "400": 0, "401": 0, "403": 0,
-       "404": 0, "405": 0, "500": 0}
-
-count = 0
-size = 0
-
-try:
-    for line in sys.stdin:
-        if count != 0 and count % 10 == 0:
-            printsts(sts, size)
-
-        stlist = line.split()
-        count += 1
+    for line in lines:
+        parts = line.split()
+        if len(parts) != 10:
+            continue
 
         try:
-            size += int(stlist[-1])
-        except:
-            pass
+            file_size = int(parts[9])
+            total_size += file_size
 
-        try:
-            if stlist[-2] in sts:
-                sts[stlist[-2]] += 1
-        except:
-            pass
-    printsts(sts, size)
+            status_code = int(parts[7])
+            if status_code in [200, 301, 400, 401, 403, 404, 405, 500]:
+                status_code_counts[status_code] = status_code_counts.get(
+                    status_code, 0) + 1
+        except ValueError:
+            continue
+
+    return total_size, status_code_counts
 
 
-except KeyboardInterrupt:
-    printsts(sts, size)
-    raise
+def print_statistics(total_size, status_code_counts):
+    print(f"Total file size: {total_size}")
+    for status_code in sorted(status_code_counts.keys()):
+        print(f"{status_code}: {status_code_counts[status_code]}")
+
+
+def main():
+    lines = []
+    try:
+        for line in sys.stdin:
+            lines.append(line.strip())
+            if len(lines) % 10 == 0:
+                total_size, status_code_counts = compute_metrics(lines)
+                print_statistics(total_size, status_code_counts)
+                lines = []
+    except KeyboardInterrupt:
+        total_size, status_code_counts = compute_metrics(lines)
+        print_statistics(total_size, status_code_counts)
+
+
+if __name__ == "__main__":
+    main()

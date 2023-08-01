@@ -21,12 +21,12 @@ if int(sys.argv[1]) < 4:
 n = int(sys.argv[1])
 
 
-def queens(n, e=0, a=[], b=[], c=[]):
+def queens(n, i=0, a=[], b=[], c=[]):
     """ find possible positions """
-    if e < n:
+    if i < n:
         for j in range(n):
-            if j not in a and e + j not in b and e - j not in c:
-                yield from queens(n, e + 1, a + [j], b + [e + j], c + [e - j])
+            if j not in a and i + j not in b and i - j not in c:
+                yield from queens(n, i + 1, a + [j], b + [i + j], c + [i - j])
     else:
         yield a
 
@@ -34,14 +34,14 @@ def queens(n, e=0, a=[], b=[], c=[]):
 def solve(n):
     """ solve """
     k = []
-    e = 0
+    i = 0
     for solution in queens(n, 0):
         for s in solution:
-            k.append([e, s])
+            k.append([i, s])
             i += 1
         print(k)
         k = []
-        e = 0
+        i = 0
 
 
 solve(n)

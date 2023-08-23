@@ -3,15 +3,10 @@
    to meet a given amount total"""
 
 
-#!/usr/bin/python3
-
-def makeChange(coins, total):
-    """This function will take a list of coins and use
-       that to calculate how much change the total will require
-    """
+def make_change(coins, total):
+    """This function calculates how much change is required using a list of coins."""
     if total <= 0:
         return 0
-
     else:
         coins.sort(reverse=True)
         counter = 0
@@ -22,3 +17,11 @@ def makeChange(coins, total):
         if total == 0:
             return counter
         return -1
+
+
+if __name__ == "__main__":
+    # Example usage:
+    coins = [1, 2, 5]
+    total = 11
+    result = make_change(coins, total)
+    print(result)

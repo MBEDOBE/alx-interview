@@ -3,25 +3,21 @@
    to meet a given amount total"""
 
 
-def make_change(coins, total):
-    """This function calculates how much change is required using a list of coins."""
+def makeChange(coins, total):
+    """This function will take a list of coins and use
+       that to calculate how much change the total will require
+    """
     if total <= 0:
         return 0
+
     else:
-        coins.sort(reverse=True)
+        coin = sorted(coins)
+        coin.reverse()
         counter = 0
-        for coin in coins:
-            while total >= coin:
+        for e in coin:
+            while (total >= e):
                 counter += 1
-                total -= coin
+                total -= e
         if total == 0:
             return counter
         return -1
-
-
-if __name__ == "__main__":
-    # Example usage:
-    coins = [1, 2, 5]
-    total = 11
-    result = make_change(coins, total)
-    print(result)

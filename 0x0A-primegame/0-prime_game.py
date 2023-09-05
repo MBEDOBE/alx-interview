@@ -1,38 +1,44 @@
 #!/usr/bin/python3
+"""
+Module: Game of choosing Prime numbers
+"""
+
+
+def primeNumbers(n):
+    """Return list of prime numbers between 1 and n inclusive
+       Args:
+        n (int): upper boundary of range. lower boundary is always 1
+    """
+    prime_numbers = []
+    filtered = [True] * (n + 1)
+    for prime in range(2, n + 1):
+        if (filtered[prime]):
+            prime_numbers.append(prime)
+            for i in range(prime, n + 1, prime):
+                filtered[i] = False
+    return prime_numbers
+
 
 def isWinner(x, nums):
-    def is_prime(num):
-        if num < 2:
-            return False
-        for i in range(2, int(num ** 0.5) + 1):
-            if num % i == 0:
-                return False
-        return True
-
-    def play_game(n):
-        if n % 2 == 0:
-            return "Ben"
-        else:
-            return "Maria"
-
-    winner_count = {"Maria": 0, "Ben": 0}
-
-    for n in nums:
-        if is_prime(n):
-            winner = play_game(n)
-            winner_count[winner] += 1
-
-    if winner_count["Maria"] > winner_count["Ben"]:
-        return "Maria"
-    elif winner_count["Ben"] > winner_count["Maria"]:
-        return "Ben"
-    else:
+    """
+    Determines winner of Prime Game
+    Args:
+        x (int): no. of rounds of game
+        nums (int): upper limit of range for each round
+    Return:
+        Name of winner (Maria or Ben) or None if winner cannot be found
+    """
+    if x is None or nums is None or x == 0 or nums == []:
         return None
-
-
-# Example usage
-if __name__ == "__main__":
-    x = 3
-    nums = [4, 5, 1]
-    result = isWinner(x, nums)
-    print(result)  # Output: "Ben"
+    Maria = Ben = 0
+    for i in range(x):
+        prime_numbers = primeNumbers(nums[i])
+        if len(prime_numbers) % 2 == 0:
+            Ben += 1
+        else:
+            Maria += 1
+    if Maria > Ben:
+        return 'Maria'
+    elif Ben > Maria:
+        return 'Ben'
+    return None
